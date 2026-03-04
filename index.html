@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#F7F5F0" />
+  <title>Hidden Worlds — Passport</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ── HEADER ── -->
+  <header class="app-header" id="app-header">
+    <button class="header-back" id="header-back" aria-label="Back" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+    </button>
+    <div class="header-brand" id="header-brand">
+      <img src="assets/logo.png" alt="Hidden Worlds" class="header-logo" />
+      <div class="header-text">
+        <span class="header-title">HIDDEN WORLDS</span>
+        <span class="header-subtitle">DIGITAL PASSPORT</span>
+      </div>
+    </div>
+    <div class="header-city" id="header-city" hidden>
+      <!-- Filled by JS when in city view -->
+    </div>
+  </header>
+
+  <!-- ── HOME VIEW ── -->
+  <div id="view-home" class="view">
+    <div class="profile-block">
+      <div class="profile-icon">✈</div>
+      <div class="profile-info">
+        <span class="profile-label">TRAVELLER</span>
+        <span class="profile-count" id="profile-count">— / — cards</span>
+      </div>
+    </div>
+    <div class="progress-bar-track" id="global-progress-track">
+      <div class="progress-bar-fill" id="global-progress-fill" style="width:0%"></div>
+    </div>
+
+    <div class="section-label">YOUR COLLECTION</div>
+    <div class="city-grid" id="city-grid"></div>
+  </div>
+
+  <!-- ── CITY ALBUM VIEW ── -->
+  <div id="view-city" class="view" hidden>
+    <div class="album-meta" id="album-meta"></div>
+    <div class="card-grid" id="card-grid"></div>
+  </div>
+
+  <!-- ── SCAN FAB ── -->
+  <button class="fab-scan" id="fab-scan" aria-label="Scan QR code">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="3 9 3 3 9 3"/><polyline points="21 9 21 3 15 3"/>
+      <polyline points="3 15 3 21 9 21"/><polyline points="21 15 21 21 15 21"/>
+      <rect x="7" y="7" width="10" height="10" rx="1"/>
+    </svg>
+    <span>SCAN</span>
+  </button>
+
+  <!-- ── CARD DETAIL MODAL ── -->
+  <div class="modal-overlay" id="modal-overlay" aria-hidden="true">
+    <div class="modal" id="modal" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <button class="modal-close" id="modal-close" aria-label="Close">&#x2715;</button>
+        <span class="modal-city-label" id="modal-city-label"></span>
+      </div>
+      <div class="modal-body">
+        <div class="flip-scene" id="flip-scene">
+          <div class="flip-card" id="flip-card">
+            <div class="flip-face flip-front">
+              <img id="modal-front-img" src="" alt="Card front" />
+            </div>
+            <div class="flip-face flip-back-face">
+              <img id="modal-back-img" src="" alt="Card back" />
+            </div>
+          </div>
+        </div>
+        <div class="flip-hint">Tap card to flip</div>
+        <blockquote class="modal-quote" id="modal-quote"></blockquote>
+        <div class="modal-meta" id="modal-meta"></div>
+        <p class="modal-blurb" id="modal-blurb"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── QR SCANNER OVERLAY ── -->
+  <div class="scanner-overlay" id="scanner-overlay" aria-hidden="true">
+    <div class="scanner-header">
+      <button class="scanner-close" id="scanner-close" aria-label="Close scanner">&#x2715;</button>
+      <span class="scanner-title">SCAN YOUR CARD</span>
+    </div>
+    <div class="scanner-viewport">
+      <div id="qr-reader"></div>
+      <div class="scanner-frame">
+        <span class="corner tl"></span><span class="corner tr"></span>
+        <span class="corner bl"></span><span class="corner br"></span>
+      </div>
+    </div>
+    <p class="scanner-hint">Point the camera at the QR code on the back of your card</p>
+    <div class="scanner-result" id="scanner-result"></div>
+  </div>
+
+  <!-- ── TOAST ── -->
+  <div class="toast" id="toast"></div>
+
+  <!-- ── UNLOCK OVERLAY ── -->
+  <div class="unlock-overlay" id="unlock-overlay" aria-hidden="true">
+    <div class="unlock-content">
+      <div class="unlock-glow"></div>
+      <img class="unlock-card-img" id="unlock-card-img" src="" alt="" />
+      <div class="unlock-label" id="unlock-label"></div>
+      <button class="unlock-dismiss" id="unlock-dismiss">VIEW CARD</button>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
