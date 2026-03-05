@@ -404,6 +404,40 @@ body {
 
 .card-tile.just-unlocked { animation: card-reveal 1s ease forwards; }
 
+.card-tile.placeholder {
+  background: #1a1a1a;
+  border: 1.5px dashed rgba(255,255,255,0.12);
+  cursor: default;
+}
+
+.placeholder-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.placeholder-lock { font-size: 20px; opacity: 0.4; }
+
+.placeholder-num {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.1em;
+}
+
+.placeholder-soon {
+  font-family: var(--font-ui);
+  font-size: 7px;
+  letter-spacing: 0.2em;
+  color: rgba(255,255,255,0.2);
+  text-transform: uppercase;
+}
+
 /* ── FAB ── */
 .fab-scan {
   position: fixed;

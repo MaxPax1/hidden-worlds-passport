@@ -258,6 +258,16 @@ function renderCityAlbum(group) {
         <div class="card-number-badge">${card.card_number}</div>
       `;
       tile.addEventListener('click', () => openModal(card, group));
+    } else if (card.locked_placeholder) {
+      tile.classList.add('placeholder');
+      tile.innerHTML = `
+        <div class="placeholder-inner">
+          <span class="placeholder-lock">🔒</span>
+          <span class="placeholder-num">${card.card_number}</span>
+          <span class="placeholder-soon">COMING SOON</span>
+        </div>
+      `;
+      tile.addEventListener('click', () => showToast('This card hasn\'t been released yet'));
     } else {
       tile.innerHTML = `
         <img class="card-thumb" src="${artSrc}" alt="Locked card" loading="lazy" />
