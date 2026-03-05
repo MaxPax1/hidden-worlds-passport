@@ -334,7 +334,11 @@ function openScanner() {
   }
 
   qrScanner = new Html5Qrcode('qr-reader');
-  const config = { fps: 10, qrbox: { width: 220, height: 220 } };
+  const config = {
+    fps: 10,
+    qrbox: (w, h) => { const s = Math.floor(Math.min(w, h) * 0.72); return { width: s, height: s }; },
+    videoConstraints: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } },
+  };
   const onSuccess = (text) => handleScan(text);
   const onError = () => {};
   const showErr = () => {
@@ -342,15 +346,8 @@ function openScanner() {
       'Camera not available. Check permissions.';
   };
 
-  Html5Qrcode.getCameras().then(cameras => {
-    if (!cameras || cameras.length === 0) { showErr(); return; }
-    // Prefer the last camera (usually rear-facing on phones)
-    const cam = cameras.length > 1 ? cameras[cameras.length - 1] : cameras[0];
-    qrScanner.start(cam.id, config, onSuccess, onError).catch(showErr);
-  }).catch(() => {
-    // Fallback to facingMode constraint
-    qrScanner.start({ facingMode: 'environment' }, config, onSuccess, onError).catch(showErr);
-  });
+  qrScanner.start({ facingMode: { ideal: 'environment' } }, config, onSuccess, onError)
+    .catch(() => qrScanner.start({ facingMode: 'user' }, config, onSuccess, onError).catch(showErr));
 }
 
 function closeScanner() {
