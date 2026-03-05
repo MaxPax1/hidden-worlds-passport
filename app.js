@@ -357,7 +357,7 @@ function openScanner() {
         ctx.drawImage(video, 0, 0);
         if (window.jsQR) {
           const img  = ctx.getImageData(0, 0, canvas.width, canvas.height);
-          const code = jsQR(img.data, img.width, img.height, { inversionAttempts: 'dontInvert' });
+          const code = jsQR(img.data, img.width, img.height, { inversionAttempts: 'invertFirst' });
           if (code) { handleScan(code.data); return; }
         }
       }
