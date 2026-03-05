@@ -322,53 +322,69 @@ function toggleFlip() {
 
 // ── QR SCANNER ───────────────────────────────────────────────────────────────
 
-async function openScanner() {
+function openScanner() {
   const overlay = document.getElementById('scanner-overlay');
   document.getElementById('scanner-result').textContent = '';
   overlay.setAttribute('aria-hidden', 'false');
   overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
 
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    document.getElementById('scanner-result').textContent = 'Camera not supported in this browser.';
+    return;
+  }
+
   const readerEl = document.getElementById('qr-reader');
   readerEl.innerHTML = '';
 
-  let video;
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } },
-    });
-    scanStream = stream;
-    video = document.createElement('video');
-    video.setAttribute('playsinline', '');
-    video.setAttribute('autoplay', '');
-    video.setAttribute('muted', '');
-    readerEl.appendChild(video);
-    video.srcObject = stream;
-    await video.play();
-  } catch (e) {
-    document.getElementById('scanner-result').textContent =
-      'Camera not available. Check permissions.';
-    return;
-  }
+  // Create video element synchronously (before any Promise) to preserve iOS gesture context
+  const video = document.createElement('video');
+  video.setAttribute('playsinline', '');
+  video.setAttribute('autoplay', '');
+  video.setAttribute('muted', '');
+  video.muted = true; // property form required for iOS
+  readerEl.appendChild(video);
 
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
-  function tick() {
-    if (!scanStream) return;
-    if (video.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA) {
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      ctx.drawImage(video, 0, 0);
-      if (window.jsQR) {
-        const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const code = jsQR(img.data, img.width, img.height, { inversionAttempts: 'dontInvert' });
-        if (code) { handleScan(code.data); return; }
+  function startLoop() {
+    function tick() {
+      if (!scanStream) return;
+      if (video.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA) {
+        canvas.width  = video.videoWidth;
+        canvas.height = video.videoHeight;
+        ctx.drawImage(video, 0, 0);
+        if (window.jsQR) {
+          const img  = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const code = jsQR(img.data, img.width, img.height, { inversionAttempts: 'dontInvert' });
+          if (code) { handleScan(code.data); return; }
+        }
       }
+      scanRAF = requestAnimationFrame(tick);
     }
     scanRAF = requestAnimationFrame(tick);
   }
-  scanRAF = requestAnimationFrame(tick);
+
+  function attachStream(stream) {
+    scanStream = stream;
+    video.srcObject = stream;
+    video.play().catch(() => {}); // autoplay attr handles it; .play() is belt-and-suspenders
+    video.addEventListener('loadedmetadata', startLoop, { once: true });
+  }
+
+  // Try rear camera first, fall back to any camera
+  navigator.mediaDevices
+    .getUserMedia({ video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } } })
+    .then(attachStream)
+    .catch(() =>
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(attachStream)
+        .catch(() => {
+          document.getElementById('scanner-result').textContent =
+            'Camera access denied. Check your browser permissions.';
+        })
+    );
 }
 
 function closeScanner() {
@@ -377,7 +393,7 @@ function closeScanner() {
   overlay.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
   if (scanStream) { scanStream.getTracks().forEach(t => t.stop()); scanStream = null; }
-  if (scanRAF) { cancelAnimationFrame(scanRAF); scanRAF = null; }
+  if (scanRAF)    { cancelAnimationFrame(scanRAF); scanRAF = null; }
   document.getElementById('qr-reader').innerHTML = '';
 }
 
