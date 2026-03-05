@@ -349,17 +349,39 @@ function openScanner() {
   const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
   function startLoop() {
+    document.getElementById('scanner-result').textContent = 'Scanning\u2026';
+
+    // Path A: native BarcodeDetector (iOS Safari 17.4+, Chrome 88+) — handles inverted QR natively
+    if ('BarcodeDetector' in window) {
+      const detector = new BarcodeDetector({ formats: ['qr_code'] });
+      function tickNative() {
+        if (!scanStream) return;
+        if (video.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA) {
+          detector.detect(video)
+            .then(codes => {
+              if (!scanStream) return;
+              if (codes.length > 0) { handleScan(codes[0].rawValue); return; }
+              scanRAF = requestAnimationFrame(tickNative);
+            })
+            .catch(() => { scanRAF = requestAnimationFrame(tickNative); });
+          return;
+        }
+        scanRAF = requestAnimationFrame(tickNative);
+      }
+      scanRAF = requestAnimationFrame(tickNative);
+      return;
+    }
+
+    // Path B: jsQR fallback — attemptBoth tries normal + inverted passes
     function tick() {
       if (!scanStream) return;
-      if (video.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA) {
+      if (video.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA && window.jsQR) {
         canvas.width  = video.videoWidth;
         canvas.height = video.videoHeight;
         ctx.drawImage(video, 0, 0);
-        if (window.jsQR) {
-          const img  = ctx.getImageData(0, 0, canvas.width, canvas.height);
-          const code = jsQR(img.data, img.width, img.height, { inversionAttempts: 'invertFirst' });
-          if (code) { handleScan(code.data); return; }
-        }
+        const img  = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const code = jsQR(img.data, img.width, img.height, { inversionAttempts: 'attemptBoth' });
+        if (code) { handleScan(code.data); return; }
       }
       scanRAF = requestAnimationFrame(tick);
     }
