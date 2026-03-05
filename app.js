@@ -132,7 +132,7 @@ function categoryClass(cat) {
 
 // ── LOCAL STORAGE ────────────────────────────────────────────────────────────
 
-const LS_KEY = 'hw_unlocked_ids';
+const LS_KEY = 'hw_unlocked_ids_v2';
 
 function getUnlocked() {
   try { return new Set(JSON.parse(localStorage.getItem(LS_KEY) || '[]')); }
@@ -141,13 +141,6 @@ function getUnlocked() {
 
 function saveUnlocked(set) {
   localStorage.setItem(LS_KEY, JSON.stringify([...set]));
-}
-
-function seedUnlocked() {
-  if (localStorage.getItem(LS_KEY) === null) {
-    const ids = CITY_GROUPS.flatMap(g => g.cards.filter(c => c.id).map(c => c.id));
-    saveUnlocked(new Set(ids));
-  }
 }
 
 // ── STATE ────────────────────────────────────────────────────────────────────
@@ -344,14 +337,22 @@ function openScanner() {
   }
 
   qrScanner = new Html5Qrcode('qr-reader');
-  qrScanner.start(
-    { facingMode: 'environment' },
-    { fps: 10, qrbox: { width: 220, height: 220 }, aspectRatio: 1.0 },
-    (text) => handleScan(text),
-    () => {}
-  ).catch(() => {
+  const config = { fps: 10, qrbox: { width: 220, height: 220 } };
+  const onSuccess = (text) => handleScan(text);
+  const onError = () => {};
+  const showErr = () => {
     document.getElementById('scanner-result').textContent =
       'Camera not available. Check permissions.';
+  };
+
+  Html5Qrcode.getCameras().then(cameras => {
+    if (!cameras || cameras.length === 0) { showErr(); return; }
+    // Prefer the last camera (usually rear-facing on phones)
+    const cam = cameras.length > 1 ? cameras[cameras.length - 1] : cameras[0];
+    qrScanner.start(cam.id, config, onSuccess, onError).catch(showErr);
+  }).catch(() => {
+    // Fallback to facingMode constraint
+    qrScanner.start({ facingMode: 'environment' }, config, onSuccess, onError).catch(showErr);
   });
 }
 
