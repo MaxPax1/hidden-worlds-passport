@@ -692,11 +692,8 @@ body {
   margin-top: 20px;
 }
 
-#qr-reader { width: 100%; border-radius: 12px; }
-#qr-reader video { width: 100% !important; height: auto !important; border-radius: 12px; display: block; }
-#qr-reader img { display: none !important; }
-#qr-reader__scan_region { border-radius: 12px; overflow: hidden; }
-#qr-reader__dashboard { display: none !important; }
+#qr-reader { width: 100%; border-radius: 12px; overflow: hidden; }
+#qr-reader video { width: 100%; height: auto; display: block; }
 
 .scanner-frame { position: absolute; inset: 0; pointer-events: none; }
 

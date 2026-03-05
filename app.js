@@ -145,7 +145,8 @@ function saveUnlocked(set) {
 let unlocked = new Set();
 let currentView = 'home';   // 'home' | 'city'
 let currentGroup = null;
-let qrScanner = null;
+let scanStream = null;
+let scanRAF = null;
 let pendingUnlockCard = null;
 
 // ── GLOBAL STATS ─────────────────────────────────────────────────────────────
@@ -321,33 +322,53 @@ function toggleFlip() {
 
 // ── QR SCANNER ───────────────────────────────────────────────────────────────
 
-function openScanner() {
+async function openScanner() {
   const overlay = document.getElementById('scanner-overlay');
   document.getElementById('scanner-result').textContent = '';
   overlay.setAttribute('aria-hidden', 'false');
   overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
 
-  if (!window.Html5Qrcode) {
-    document.getElementById('scanner-result').textContent = 'Scanner not available.';
+  const readerEl = document.getElementById('qr-reader');
+  readerEl.innerHTML = '';
+
+  let video;
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } },
+    });
+    scanStream = stream;
+    video = document.createElement('video');
+    video.setAttribute('playsinline', '');
+    video.setAttribute('autoplay', '');
+    video.setAttribute('muted', '');
+    readerEl.appendChild(video);
+    video.srcObject = stream;
+    await video.play();
+  } catch (e) {
+    document.getElementById('scanner-result').textContent =
+      'Camera not available. Check permissions.';
     return;
   }
 
-  qrScanner = new Html5Qrcode('qr-reader');
-  const config = {
-    fps: 10,
-    qrbox: (w, h) => { const s = Math.floor(Math.min(w, h) * 0.72); return { width: s, height: s }; },
-    videoConstraints: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } },
-  };
-  const onSuccess = (text) => handleScan(text);
-  const onError = () => {};
-  const showErr = () => {
-    document.getElementById('scanner-result').textContent =
-      'Camera not available. Check permissions.';
-  };
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
-  qrScanner.start({ facingMode: { ideal: 'environment' } }, config, onSuccess, onError)
-    .catch(() => qrScanner.start({ facingMode: 'user' }, config, onSuccess, onError).catch(showErr));
+  function tick() {
+    if (!scanStream) return;
+    if (video.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA) {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      ctx.drawImage(video, 0, 0);
+      if (window.jsQR) {
+        const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const code = jsQR(img.data, img.width, img.height, { inversionAttempts: 'dontInvert' });
+        if (code) { handleScan(code.data); return; }
+      }
+    }
+    scanRAF = requestAnimationFrame(tick);
+  }
+  scanRAF = requestAnimationFrame(tick);
 }
 
 function closeScanner() {
@@ -355,7 +376,9 @@ function closeScanner() {
   overlay.classList.remove('open');
   overlay.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
-  if (qrScanner) { qrScanner.stop().catch(() => {}); qrScanner = null; }
+  if (scanStream) { scanStream.getTracks().forEach(t => t.stop()); scanStream = null; }
+  if (scanRAF) { cancelAnimationFrame(scanRAF); scanRAF = null; }
+  document.getElementById('qr-reader').innerHTML = '';
 }
 
 function handleScan(text) {
