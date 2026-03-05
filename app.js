@@ -44,9 +44,6 @@ const CITY_GROUPS = [
         back:  'cards/underground-republics/back.png',
         art:   'cards/underground-republics/art.png',
       },
-      { id: null, card_number: 'IV',  locked_placeholder: true, art: 'cards/seven-noses/art.png' },
-      { id: null, card_number: 'V',   locked_placeholder: true, art: 'cards/notting-hill-carnival/art.png' },
-      { id: null, card_number: 'VI',  locked_placeholder: true, art: 'cards/underground-republics/art.png' },
     ],
   },
   {
@@ -258,16 +255,6 @@ function renderCityAlbum(group) {
         <div class="card-number-badge">${card.card_number}</div>
       `;
       tile.addEventListener('click', () => openModal(card, group));
-    } else if (card.locked_placeholder) {
-      tile.classList.add('placeholder');
-      tile.innerHTML = `
-        <div class="placeholder-inner">
-          <span class="placeholder-lock">🔒</span>
-          <span class="placeholder-num">${card.card_number}</span>
-          <span class="placeholder-soon">COMING SOON</span>
-        </div>
-      `;
-      tile.addEventListener('click', () => showToast('This card hasn\'t been released yet'));
     } else {
       tile.innerHTML = `
         <img class="card-thumb" src="${artSrc}" alt="Locked card" loading="lazy" />
