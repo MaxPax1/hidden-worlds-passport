@@ -174,8 +174,7 @@
     }
 
     function waURL(cardId, message) {
-      const text = encodeURIComponent(message.replace('{id}', cardId));
-      return `https://wa.me/${WA_NUMBER}?text=${text}`;
+      return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`;
     }
 
     function startCountdown(url) {
@@ -238,6 +237,7 @@
     async function main() {
       const params = new URLSearchParams(window.location.search);
       const rawId  = params.get('unlock');
+      const token  = (params.get('token') || '').toUpperCase();
 
       if (!rawId) {
         renderError('No card found. Scan the QR code on the back of your Hidden Worlds card.');
@@ -245,11 +245,12 @@
       }
 
       const cardId = stripRunSuffix(rawId.trim().toUpperCase());
+      const tokenSuffix = token ? ` · ${token}` : '';
 
       // Check if Firebase config is still placeholder
       if (FIREBASE_CONFIG.apiKey === 'PASTE_HERE') {
         // Dev fallback: skip Firestore, go straight to unclaimed flow
-        const link = waURL(cardId, 'Hi! I just found Hidden Worlds card {id} and I\'d like to claim it.');
+        const link = waURL(cardId, `Claim ${cardId}${tokenSuffix}`);
         renderUnclaimed(cardId, link);
         return;
       }
@@ -260,7 +261,7 @@
         db = getFirestore(app);
       } catch (e) {
         // Firebase init failed — degrade gracefully
-        const link = waURL(cardId, 'Hi! I just found Hidden Worlds card {id} and I\'d like to claim it.');
+        const link = waURL(cardId, `Claim ${cardId}${tokenSuffix}`);
         renderUnclaimed(cardId, link);
         return;
       }
@@ -272,17 +273,17 @@
 
         if (snap.exists() && snap.data().claimed) {
           // Already claimed
-          const link = waURL(cardId, 'Hi! I scanned Hidden Worlds card {id}. Can you show me the owner\'s profile?');
+          const link = waURL(cardId, `Show owner of ${cardId}${tokenSuffix}`);
           renderClaimed(cardId, link);
         } else {
           // Unclaimed — mark it and redirect
           await setDoc(cardRef, { claimed: true, claimedAt: serverTimestamp() }, { merge: true });
-          const link = waURL(cardId, 'Hi! I just found Hidden Worlds card {id} and I\'d like to claim it.');
+          const link = waURL(cardId, `Claim ${cardId}${tokenSuffix}`);
           renderUnclaimed(cardId, link);
         }
       } catch (e) {
         // Firestore read/write failed — degrade to unclaimed
-        const link = waURL(cardId, 'Hi! I just found Hidden Worlds card {id} and I\'d like to claim it.');
+        const link = waURL(cardId, `Claim ${cardId}${tokenSuffix}`);
         renderUnclaimed(cardId, link);
       }
     }
