@@ -119,6 +119,22 @@
       flex-shrink: 0;
     }
 
+    .claim-card-img {
+      width: min(60vw, 180px);
+      aspect-ratio: 2 / 3;
+      border-radius: 10px;
+      display: block;
+      margin: 0 auto 1.75rem;
+      box-shadow:
+        0 8px 32px rgba(0,0,0,0.5),
+        0 0 36px 8px rgba(200, 150, 30, 0.28);
+    }
+
+    .claim-card-img.muted {
+      filter: grayscale(30%) brightness(0.75);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+
     .error-msg {
       font-size: 1rem;
       color: #8899B8;
@@ -162,6 +178,15 @@
 
     const container = document.getElementById('card-content');
 
+    const CARD_FOLDERS = {
+      'LDN-2601': 'seven-noses',
+      'LDN-2602': 'notting-hill-carnival',
+      'LDN-2603': 'underground-republics',
+      'MLT-2601': 'malta-oracle-chamber',
+      'FRA-2601': 'frankfurt-wahlkapelle',
+      'DBV-2601': 'dubrovnik-rudjer-boskovic',
+    };
+
     // WhatsApp SVG icon
     const WA_SVG = `<svg class="wa-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
@@ -194,8 +219,15 @@
       requestAnimationFrame(tick);
     }
 
+    function cardImgHtml(cardId, muted) {
+      const folder = CARD_FOLDERS[cardId];
+      if (!folder) return '';
+      return `<img class="claim-card-img${muted ? ' muted' : ''}" src="cards/${folder}/front.png" alt="Hidden Worlds card" />`;
+    }
+
     function renderUnclaimed(cardId, waLink) {
       container.innerHTML = `
+        ${cardImgHtml(cardId, false)}
         <div class="state-icon">✦</div>
         <div class="headline">You found a Hidden Worlds card</div>
         <div class="card-id">${cardId}</div>
@@ -213,6 +245,7 @@
 
     function renderClaimed(cardId, waLink) {
       container.innerHTML = `
+        ${cardImgHtml(cardId, true)}
         <div class="state-icon">🔖</div>
         <div class="headline">This card has an owner</div>
         <div class="card-id">${cardId}</div>

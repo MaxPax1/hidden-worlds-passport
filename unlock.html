@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#19233A" />
+  <title>Hidden Worlds — Card Unlock</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #19233A;
+      color: #F0EDE6;
+      font-family: 'Cormorant Garamond', serif;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 2.25rem 1.5rem 3.5rem;
+      text-align: center;
+    }
+
+    .logo {
+      width: 100px;
+      margin-bottom: 2rem;
+      opacity: 0.9;
+      animation: fadeIn 0.5s ease both;
+    }
+
+    /* ── Card image ── */
+    .card-wrap {
+      width: min(68vw, 220px);
+      margin: 0 auto 1.75rem;
+      animation: cardDrop 0.55s 0.1s cubic-bezier(.34,1.4,.64,1) both;
+    }
+
+    .card-img {
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      border-radius: 10px;
+      display: block;
+      box-shadow:
+        0 10px 40px rgba(0,0,0,0.55),
+        0 0 36px 6px rgba(200, 150, 30, 0.22);
+      transition: box-shadow 0.7s ease, transform 0.7s ease;
+    }
+
+    .is-claimed .card-img {
+      box-shadow:
+        0 10px 40px rgba(0,0,0,0.55),
+        0 0 64px 18px rgba(200, 150, 30, 0.48);
+      transform: scale(1.04);
+    }
+
+    /* ── City / subject / quote ── */
+    .card-city {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.63rem;
+      font-weight: 600;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: #6A7A99;
+      margin-bottom: 0.3rem;
+      animation: fadeUp 0.45s 0.28s ease both;
+    }
+
+    .card-subject {
+      font-family: 'Cinzel', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      color: #F0EDE6;
+      margin-bottom: 1rem;
+      animation: fadeUp 0.45s 0.33s ease both;
+    }
+
+    .card-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.2rem;
+      color: #C8B97A;
+      line-height: 1.55;
+      max-width: 300px;
+      margin: 0 auto 2rem;
+      animation: fadeUp 0.45s 0.38s ease both;
+    }
+
+    /* ── Pre-claim block ── */
+    .pre-claim {
+      width: 100%;
+      max-width: 340px;
+      animation: fadeUp 0.45s 0.48s ease both;
+    }
+
+    .is-claimed .pre-claim {
+      display: none;
+    }
+
+    .tc-line {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.7rem;
+      color: #4A5A78;
+      line-height: 1.55;
+      margin-bottom: 1.1rem;
+    }
+
+    .tc-line a {
+      color: #5A6A88;
+    }
+
+    .claim-btn {
+      width: 100%;
+      background: #C8961E;
+      color: #0D1525;
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 50px;
+      padding: 1rem 2rem;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+
+    .claim-btn:active {
+      opacity: 0.82;
+      transform: scale(0.97);
+    }
+
+    /* ── Post-claim block ── */
+    .post-claim {
+      display: none;
+      width: 100%;
+      max-width: 340px;
+    }
+
+    .is-claimed .post-claim {
+      display: block;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .claimed-headline {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: #C8B97A;
+      margin-bottom: 1.1rem;
+    }
+
+    .card-blurb {
+      font-size: 1.08rem;
+      color: #C0B8A8;
+      line-height: 1.65;
+      margin-bottom: 1.6rem;
+    }
+
+    .count-chip {
+      display: inline-block;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #6A7A99;
+      border: 1px solid #2E3D5A;
+      border-radius: 50px;
+      padding: 0.35rem 1.1rem;
+    }
+
+    /* ── Error ── */
+    .error-msg {
+      font-size: 1rem;
+      color: #6A7A99;
+      max-width: 260px;
+      margin: 2rem auto 0;
+      line-height: 1.65;
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 0.9; transform: none; }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: none; }
+    }
+    @keyframes cardDrop {
+      from { opacity: 0; transform: translateY(-18px) scale(0.93); }
+      to   { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <img class="logo" src="assets/logo.png" alt="Hidden Worlds" />
+
+  <div id="app"></div>
+
+  <script>
+    const CARDS = {
+      'LDN-2601': {
+        city: 'LONDON',
+        subject: 'THE SEVEN NOSES',
+        folder: 'seven-noses',
+        quote: 'Thirty-five noses.\nFourteen years of silence.',
+        blurb: 'In 1997, an unknown artist secretly fixed 35 plaster noses across Soho — a silent protest against surveillance cameras. He stayed hidden for 14 years; legend promises fortune to anyone who finds all seven.',
+      },
+      'LDN-2602': {
+        city: 'LONDON',
+        subject: 'NOTTING HILL CARNIVAL',
+        folder: 'notting-hill-carnival',
+        quote: 'They answered with music.',
+        blurb: 'In 1958, racist mobs attacked Caribbean families across Notting Hill. The community\'s answer was not retreat — steel bands marched the same streets, turning grief into Europe\'s loudest celebration.',
+      },
+      'LDN-2603': {
+        city: 'LONDON',
+        subject: 'UNDERGROUND REPUBLIC',
+        folder: 'underground-republics',
+        quote: 'When the city went dark,\nthey built one below.',
+        blurb: 'When the government banned Underground sheltering during the Blitz, Londoners broke in and built a city inside — bunks, a theatre, a library, elected committees. When authority abandoned them, they governed themselves.',
+      },
+      'MLT-2601': {
+        city: 'PAOLA',
+        subject: 'ORACLE CHAMBER',
+        folder: 'malta-oracle-chamber',
+        quote: 'Architecture amplifies authority.',
+        blurb: 'Built 5,000 years ago, the Oracle Chamber was carved to amplify the human voice into something divine. Whoever spoke here didn\'t need an army — the stone obeyed.',
+      },
+      'FRA-2601': {
+        city: 'FRANKFURT',
+        subject: 'WAHLKAPELLE',
+        folder: 'frankfurt-wahlkapelle',
+        quote: 'Seven electors. One crown.\nBread and water.',
+        blurb: 'Hidden inside Frankfurt Cathedral, seven men were locked in the Election Chapel and fed only bread and water until they agreed on the next Holy Roman Emperor. Europe\'s most powerful throne was decided by starvation.',
+      },
+      'DBV-2601': {
+        city: 'DUBROVNIK',
+        subject: 'RUĐER BOŠKOVIĆ',
+        folder: 'dubrovnik-rudjer-boskovic',
+        quote: 'A republic sends its sharpest mind,\nnot its loudest voice.',
+        blurb: 'The Republic of Ragusa didn\'t build the largest army — it sent Ruđer Bošković, a polymath who protected Dubrovnik\'s independence through intellect alone. For a small republic surrounded by empires, brains were the deadliest weapon.',
+      },
+    };
+
+    const TOKENS = {
+      'LDN-2601': 'A9YNNGQV',
+      'LDN-2602': 'X3MG60MJ',
+      'LDN-2603': 'D5ALR7ID',
+      'MLT-2601': 'UQXTC568',
+      'FRA-2601': 'MS5WWKJJ',
+      'DBV-2601': 'QD1RQGWT',
+    };
+
+    const STORAGE_KEY = 'hw_digital_claims';
+    const TOTAL_CARDS = Object.keys(CARDS).length;
+
+    function getClaimed() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+      catch { return []; }
+    }
+
+    function markClaimed(id) {
+      const list = getClaimed();
+      if (!list.includes(id)) {
+        list.push(id);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+      }
+    }
+
+    const app = document.getElementById('app');
+    const params = new URLSearchParams(location.search);
+    const rawId  = (params.get('unlock') || '').trim().toUpperCase();
+    const token  = (params.get('token')  || '').trim().toUpperCase();
+    const archiveId = rawId.replace(/-R\d+$/i, '');
+
+    const card       = CARDS[archiveId];
+    const validToken = TOKENS[archiveId];
+
+    if (!card || !validToken || token !== validToken) {
+      app.innerHTML = `<p class="error-msg">This link has expired.</p>`;
+    } else {
+      const alreadyClaimed = getClaimed().includes(archiveId);
+      if (alreadyClaimed) markClaimed(archiveId); // ensure idempotent
+      const count = getClaimed().length;
+      const wrapClass = alreadyClaimed ? 'is-claimed' : '';
+
+      app.innerHTML = `
+        <div id="unlock-wrap" class="${wrapClass}">
+          <div class="card-wrap">
+            <img class="card-img" src="cards/${card.folder}/front.png" alt="${card.subject}" />
+          </div>
+          <div class="card-city">${card.city}</div>
+          <div class="card-subject">${card.subject}</div>
+          <div class="card-quote">${card.quote.replace(/\n/g, '<br>')}</div>
+
+          <div class="pre-claim">
+            <p class="tc-line">By continuing you agree to the Hidden Worlds <a href="#">terms of use</a>.</p>
+            <button class="claim-btn" id="claim-btn">Claim your card</button>
+          </div>
+
+          <div class="post-claim">
+            <div class="claimed-headline">That's yours now.</div>
+            <p class="card-blurb">${card.blurb}</p>
+            <span class="count-chip" id="count-chip">${count} of ${TOTAL_CARDS} cards</span>
+          </div>
+        </div>
+      `;
+
+      if (!alreadyClaimed) {
+        document.getElementById('claim-btn').addEventListener('click', () => {
+          markClaimed(archiveId);
+          const newCount = getClaimed().length;
+          document.getElementById('count-chip').textContent = `${newCount} of ${TOTAL_CARDS} cards`;
+          document.getElementById('unlock-wrap').classList.add('is-claimed');
+        });
+      }
+    }
+  </script>
+
+</body>
+</html>
