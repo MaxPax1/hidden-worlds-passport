@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#19233A" />
+  <title>Hidden Worlds — Dubrovnik</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #19233A;
+      color: #F0EDE6;
+      font-family: 'Cormorant Garamond', serif;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem 4rem;
+      text-align: center;
+    }
+
+    .logo {
+      width: 80px;
+      opacity: 0.85;
+      margin-bottom: 2.5rem;
+      animation: fadeDown 0.6s ease both;
+    }
+
+    .flag {
+      width: 48px;
+      height: auto;
+      border-radius: 3px;
+      margin-bottom: 1rem;
+      animation: fadeUp 0.5s 0.1s ease both;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+    }
+
+    .city-name {
+      font-family: 'Cinzel', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      color: #C8B97A;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      animation: fadeUp 0.5s 0.15s ease both;
+    }
+
+    .divider {
+      width: 40px;
+      height: 1px;
+      background: #2E3D5A;
+      margin: 0 auto 2rem;
+      animation: fadeUp 0.5s 0.2s ease both;
+    }
+
+    .body-copy {
+      font-size: 1.1rem;
+      font-style: italic;
+      color: #8899B8;
+      line-height: 1.75;
+      max-width: 290px;
+      margin: 0 auto 2.5rem;
+      animation: fadeUp 0.5s 0.25s ease both;
+    }
+
+    .code-block {
+      background: rgba(200, 150, 30, 0.07);
+      border: 1px solid rgba(200, 150, 30, 0.2);
+      border-radius: 12px;
+      padding: 1.25rem 2rem;
+      margin-bottom: 2.5rem;
+      max-width: 280px;
+      width: 100%;
+      animation: fadeUp 0.5s 0.3s ease both;
+    }
+
+    .code-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #6A7A99;
+      margin-bottom: 0.5rem;
+    }
+
+    .code-value {
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      color: #C8B97A;
+    }
+
+    .wa-btn {
+      display: block;
+      width: 100%;
+      max-width: 280px;
+      background: #C8961E;
+      color: #0D1525;
+      font-family: 'Cinzel', serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 50px;
+      padding: 1rem 2rem;
+      -webkit-tap-highlight-color: transparent;
+      transition: opacity 0.15s, transform 0.1s;
+      animation: fadeUp 0.5s 0.35s ease both;
+    }
+    .wa-btn:active { opacity: 0.8; transform: scale(0.97); }
+
+    .footnote {
+      margin-top: 2rem;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.58rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #2E3D5A;
+      animation: fadeUp 0.5s 0.4s ease both;
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to   { opacity: 0.85; transform: none; }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <img class="logo" src="assets/logo.png" alt="Hidden Worlds" />
+  <img class="flag" src="assets/hr.png" alt="Croatia" />
+  <div class="city-name">Dubrovnik</div>
+  <div class="divider"></div>
+
+  <p class="body-copy">
+    Most people who land here see the same walls,
+    the same streets, the same photos.
+    <br /><br />
+    A few find what the city actually is.
+  </p>
+
+  <div class="code-block">
+    <div class="code-label">Your access code</div>
+    <div class="code-value">EZBUJJ</div>
+  </div>
+
+  <a class="wa-btn" href="https://wa.me/385998427803?text=Access%20code%3A%20EZBUJJ">
+    Open WhatsApp &rarr;
+  </a>
+
+  <div class="footnote">Hidden Worlds &middot; Season I &middot; Dubrovnik</div>
+
+</body>
+</html>
