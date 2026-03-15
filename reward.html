@@ -6,14 +6,14 @@
   <title>Your Story · Hidden Worlds</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     html, body {
       width: 100%; height: 100%;
-      background: #131D2E;
+      background: #F9F7F4;
       overflow: hidden;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
@@ -36,25 +36,36 @@
       pointer-events: all;
     }
 
-    /* ── SCREEN 1: The Closing ──────────────────────────────── */
+    /* ── SCREEN 1: The Earned Moment ────────────────────────── */
     #s1 {
-      background: #131D2E;
+      background: #F9F7F4;
       padding: 48px 40px;
       text-align: center;
     }
 
     .s1-logo {
-      height: 28px;
-      opacity: 0.5;
+      height: 26px;
+      filter: invert(1);
+      opacity: 0.25;
       display: block;
-      margin: 0 auto 60px;
+      margin: 0 auto 56px;
+    }
+
+    .s1-congrats {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #C9A84C;
+      margin-bottom: 18px;
     }
 
     .s1-headline {
       font-family: 'Playfair Display', Georgia, serif;
       font-size: clamp(28px, 8vw, 36px);
       font-weight: 600;
-      color: #EDE8DF;
+      color: #1A1E2B;
       line-height: 1.2;
       margin-bottom: 20px;
       letter-spacing: -0.01em;
@@ -64,18 +75,18 @@
       font-family: 'Inter', system-ui, sans-serif;
       font-size: 15px;
       font-weight: 300;
-      color: #5A6A7E;
-      line-height: 1.7;
-      max-width: 255px;
+      color: #7A8898;
+      line-height: 1.75;
+      max-width: 260px;
       margin: 0 auto;
     }
 
     .btn-gold {
       display: inline-block;
-      margin-top: 56px;
+      margin-top: 52px;
       padding: 15px 44px;
       background: #C9A84C;
-      color: #131D2E;
+      color: #1A1E2B;
       border: none;
       border-radius: 3px;
       font-family: 'Inter', sans-serif;
@@ -91,13 +102,15 @@
 
     /* ── SCREEN 2: Card Reveal ──────────────────────────────── */
     #s2 {
-      background: #131D2E;
-      padding: 48px 40px;
+      background: #F9F7F4;
+      padding: 40px 40px 48px;
+      gap: 0;
     }
 
     .card-scene {
       perspective: 1200px;
-      width: clamp(150px, 54vw, 195px);
+      width: clamp(140px, 48vw, 185px);
+      flex-shrink: 0;
     }
 
     .card-flipper {
@@ -116,56 +129,70 @@
       -webkit-backface-visibility: hidden;
       border-radius: 10px;
       overflow: hidden;
-      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.65);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.13);
     }
     .card-face img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .card-face.front-face { transform: rotateY(180deg); }
 
     .s2-info {
-      margin-top: 36px;
+      margin-top: 32px;
       text-align: center;
       opacity: 0;
       transition: opacity 0.9s ease;
+      width: 100%;
+      max-width: 320px;
     }
     .s2-info.show { opacity: 1; }
 
+    .s2-tag {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #A8B4BF;
+      margin-bottom: 10px;
+    }
+
     .s2-name {
       font-family: 'Playfair Display', serif;
-      font-size: 17px;
+      font-size: 22px;
       font-weight: 600;
-      color: #EDE8DF;
-      margin-bottom: 8px;
+      color: #1A1E2B;
+      margin-bottom: 14px;
     }
 
-    .s2-note {
+    .s2-story {
       font-family: 'Inter', sans-serif;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 300;
-      color: #4A5A6E;
+      color: #6A7888;
+      line-height: 1.75;
+      max-width: 280px;
+      margin: 0 auto 28px;
     }
 
-    .btn-outline {
+    .btn-gold-sm {
       display: inline-block;
-      margin-top: 36px;
-      padding: 14px 40px;
-      background: transparent;
-      color: #C9A84C;
-      border: 1px solid rgba(201, 168, 76, 0.4);
+      padding: 14px 32px;
+      background: #C9A84C;
+      color: #1A1E2B;
+      border: none;
       border-radius: 3px;
       font-family: 'Inter', sans-serif;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 600;
       letter-spacing: 0.14em;
       text-transform: uppercase;
       cursor: pointer;
-      transition: background 0.2s, border-color 0.2s;
+      transition: opacity 0.15s;
       -webkit-tap-highlight-color: transparent;
     }
-    .btn-outline:active { background: rgba(201,168,76,0.08); }
+    .btn-gold-sm:active { opacity: 0.7; }
 
     /* ── SCREEN 3: Storyhunter Passport ─────────────────────── */
     #s3 {
-      background: #D8E8EF;
+      background: #EEF2F5;
       padding: 0;
       justify-content: flex-start;
     }
@@ -176,16 +203,15 @@
       z-index: 1;
     }
 
-    /* Tone down CartoDB tiles slightly */
-    .leaflet-tile-pane { filter: saturate(0.8) brightness(1.04); }
+    .leaflet-tile-pane { filter: saturate(0.75) brightness(1.03); }
 
-    /* Passport header — fades in during animation */
+    /* Passport header */
     .ppt-header {
       position: absolute;
       top: 0; left: 0; right: 0;
       z-index: 200;
-      padding: max(env(safe-area-inset-top), 20px) 24px 22px;
-      background: linear-gradient(to bottom, rgba(216,232,239,0.96) 55%, transparent);
+      padding: max(env(safe-area-inset-top), 20px) 24px 24px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.97) 60%, transparent);
       text-align: center;
       opacity: 0;
       transition: opacity 0.8s ease;
@@ -194,37 +220,37 @@
     .ppt-header.show { opacity: 1; }
 
     .ppt-logo {
-      height: 22px;
-      margin-bottom: 5px;
+      height: 20px;
+      margin-bottom: 6px;
       filter: invert(1);
-      opacity: 0.35;
+      opacity: 0.3;
     }
 
     .ppt-title {
       font-family: 'Playfair Display', serif;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 600;
       color: #1A2A3A;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.02em;
     }
 
     .ppt-sub {
       font-family: 'Inter', sans-serif;
       font-size: 11px;
       font-weight: 300;
-      color: #4A6070;
+      color: #5A6878;
       margin-top: 4px;
       line-height: 1.5;
     }
 
-    /* Guide chip — appears last */
+    /* Guide chip */
     .guide-chip {
       position: absolute;
       bottom: max(env(safe-area-inset-bottom), 28px);
       left: 50%;
       transform: translateX(-50%);
       z-index: 300;
-      background: rgba(15, 25, 42, 0.84);
+      background: rgba(15, 25, 42, 0.82);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       color: #C8D4DC;
@@ -240,34 +266,37 @@
     }
     .guide-chip.show { opacity: 1; }
 
-    /* Map pins */
-    .hw-pin {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 3px;
+    /* Map pins — wrapper approach for correct anchor */
+    .hw-pin-wrap {
+      position: relative;
+      width: 22px;
+      height: 32px;
       cursor: pointer;
-      transform: translateX(-50%);
       -webkit-tap-highlight-color: transparent;
     }
 
     .hw-pin-label {
+      position: absolute;
+      bottom: calc(100% + 5px);
+      left: 50%;
+      transform: translateX(-50%);
       font-family: 'Inter', sans-serif;
       font-size: 9px;
       font-weight: 600;
       letter-spacing: 0.13em;
       color: #fff;
-      background: rgba(15, 25, 45, 0.78);
+      background: rgba(15, 25, 45, 0.76);
       padding: 2px 7px;
       border-radius: 3px;
       white-space: nowrap;
       opacity: 0;
       transition: opacity 0.5s ease;
+      pointer-events: none;
     }
-    .hw-pin.show .hw-pin-label { opacity: 1; }
-    .hw-pin svg { filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3)); }
+    .hw-pin-wrap.show .hw-pin-label { opacity: 1; }
+    .hw-pin-wrap svg { display: block; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.28)); }
 
-    /* Map tooltip */
+    /* Map tooltip for locked pins */
     .map-tip {
       position: absolute;
       z-index: 400;
@@ -300,15 +329,15 @@
       pointer-events: none;
     }
     #modal.open {
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.45);
       pointer-events: all;
     }
 
     .modal-sheet {
       width: 100%;
-      background: #0E1825;
+      background: #FFFFFF;
       border-radius: 20px 20px 0 0;
-      padding: 0 24px max(env(safe-area-inset-bottom), 36px);
+      padding: 0 24px max(env(safe-area-inset-bottom), 40px);
       transform: translateY(100%);
       transition: transform 0.42s cubic-bezier(0.32, 0.72, 0, 1);
       max-height: 92vh;
@@ -321,23 +350,23 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 14px 0 24px;
+      padding: 16px 0 20px;
       position: relative;
     }
     .sheet-handle {
       width: 36px; height: 4px;
-      background: rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.1);
       border-radius: 2px;
     }
     .sheet-close {
       position: absolute;
       right: 0;
       width: 28px; height: 28px;
-      background: rgba(255,255,255,0.07);
+      background: rgba(0,0,0,0.05);
       border: none;
       border-radius: 50%;
-      color: #5A6A7E;
-      font-size: 13px;
+      color: #8A9EAE;
+      font-size: 12px;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -348,8 +377,8 @@
     /* Modal card flip */
     .modal-card-scene {
       perspective: 1000px;
-      width: clamp(120px, 42vw, 145px);
-      margin: 0 auto 10px;
+      width: clamp(110px, 38vw, 135px);
+      margin: 4px auto 0;
     }
     .modal-flipper {
       position: relative;
@@ -369,7 +398,7 @@
       -webkit-backface-visibility: hidden;
       border-radius: 8px;
       overflow: hidden;
-      box-shadow: 0 12px 48px rgba(0,0,0,0.55);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.14);
     }
     .modal-face img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .modal-face.back-face { transform: rotateY(180deg); }
@@ -381,15 +410,15 @@
       font-weight: 400;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: #2E3D50;
-      margin-bottom: 24px;
+      color: #B4BEC8;
+      margin: 10px 0 28px;
     }
 
     .modal-name {
       font-family: 'Playfair Display', serif;
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 600;
-      color: #EDE8DF;
+      color: #1A1E2B;
       text-align: center;
       margin-bottom: 6px;
     }
@@ -397,65 +426,65 @@
       font-family: 'Inter', sans-serif;
       font-size: 10px;
       font-weight: 500;
-      letter-spacing: 0.15em;
-      color: #364655;
+      letter-spacing: 0.16em;
+      color: #A8B4BF;
       text-align: center;
       text-transform: uppercase;
-      margin-bottom: 22px;
+      margin-bottom: 20px;
     }
     .modal-blurb {
       font-family: 'Inter', sans-serif;
       font-size: 14px;
       font-weight: 300;
-      color: #7A8E9E;
+      color: #5A6878;
       line-height: 1.8;
       text-align: center;
-      margin-bottom: 36px;
+      margin-bottom: 40px;
     }
 
     /* Physical card section */
     .physical-section {
-      border-top: 1px solid rgba(255,255,255,0.05);
-      padding-top: 30px;
+      border-top: 1px solid rgba(0,0,0,0.07);
+      padding-top: 36px;
     }
     .physical-title {
       font-family: 'Playfair Display', serif;
-      font-size: 17px;
+      font-size: 19px;
       font-weight: 400;
       font-style: italic;
-      color: #EDE8DF;
+      color: #1A1E2B;
       text-align: center;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
     .physical-body {
       font-family: 'Inter', sans-serif;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 300;
-      color: #4A5A6E;
+      color: #6A7888;
       text-align: center;
-      line-height: 1.7;
-      margin-bottom: 22px;
+      line-height: 1.75;
+      margin-bottom: 28px;
     }
     .physical-notice {
       background: rgba(201, 168, 76, 0.07);
-      border: 1px solid rgba(201, 168, 76, 0.18);
+      border: 1px solid rgba(201, 168, 76, 0.25);
       border-radius: 10px;
-      padding: 16px 18px;
+      padding: 18px 20px;
       margin-bottom: 24px;
     }
     .physical-notice p {
       font-family: 'Inter', sans-serif;
       font-size: 13px;
       font-weight: 400;
-      color: #B8953E;
+      color: #A07828;
       text-align: center;
-      line-height: 1.6;
+      line-height: 1.65;
     }
     .btn-full {
       width: 100%;
       padding: 16px;
       background: #C9A84C;
-      color: #131D2E;
+      color: #1A1E2B;
       border: none;
       border-radius: 4px;
       font-family: 'Inter', sans-serif;
@@ -466,35 +495,34 @@
       cursor: pointer;
       transition: opacity 0.15s;
       -webkit-tap-highlight-color: transparent;
+      margin-bottom: 8px;
     }
     .btn-full:active { opacity: 0.75; }
 
-    /* Leaflet attribution — keep it subtle */
     .leaflet-control-attribution {
       font-size: 9px !important;
-      opacity: 0.35;
+      opacity: 0.3;
     }
   </style>
 </head>
 <body>
 
-<!-- ── SCREEN 1: THE CLOSING ──────────────────────────────────── -->
+<!-- ── SCREEN 1: THE EARNED MOMENT ───────────────────────────── -->
 <div id="s1" class="screen active">
   <img src="assets/logo.png" class="s1-logo" alt="Hidden Worlds">
+  <div class="s1-congrats">Congratulations</div>
   <h1 class="s1-headline">You uncovered<br>Dubrovnik.</h1>
-  <p class="s1-sub">You've seen a side of Dubrovnik most visitors never find.</p>
-  <button class="btn-gold" onclick="toScreen2()">Reveal your story</button>
+  <p class="s1-sub">Most visitors never look past the old walls. Here's something to keep from this adventure.</p>
+  <button class="btn-gold" onclick="toScreen2()">Reveal what you found</button>
 </div>
 
 <!-- ── SCREEN 2: CARD REVEAL ──────────────────────────────────── -->
 <div id="s2" class="screen">
   <div class="card-scene">
     <div class="card-flipper" id="cardFlipper">
-      <!-- Back visible initially (face-down) -->
       <div class="card-face back-face">
         <img src="cards/dubrovnik-rudjer-boskovic/back.png" alt="Card back">
       </div>
-      <!-- Front revealed after flip -->
       <div class="card-face front-face">
         <img src="cards/dubrovnik-rudjer-boskovic/front.png" alt="Ruđer Bošković">
       </div>
@@ -502,9 +530,10 @@
   </div>
 
   <div class="s2-info" id="s2Info">
-    <div class="s2-name">Ruđer Bošković · Dubrovnik</div>
-    <div class="s2-note">Not everyone knows this story.</div>
-    <button class="btn-outline" onclick="toScreen3()">Save my story</button>
+    <div class="s2-tag">Dubrovnik · 2026</div>
+    <div class="s2-name">Ruđer Bošković</div>
+    <p class="s2-story">Bošković proved that intellect beats force every time. Dubrovnik's secret weapon wasn't armies — it was one brilliant mind. Only a Storyhunter would know that.</p>
+    <button class="btn-gold-sm" onclick="toScreen3()">Save to Storyhunter Passport</button>
   </div>
 </div>
 
@@ -532,7 +561,6 @@
 
     <div class="modal-card-scene">
       <div class="modal-flipper" id="modalFlipper" onclick="this.classList.toggle('flipped')">
-        <!-- Front shown in modal initially -->
         <div class="modal-face front-face">
           <img src="cards/dubrovnik-rudjer-boskovic/front.png" alt="Ruđer Bošković">
         </div>
@@ -551,12 +579,12 @@
     </p>
 
     <div class="physical-section">
-      <div class="physical-title">This story also exists as a real card.</div>
-      <p class="physical-body">A unique copy, just for you. The only souvenir that proves you were actually paying attention.</p>
+      <div class="physical-title">Turn this memory into a souvenir.</div>
+      <p class="physical-body">A printed card, made just for you. The only keepsake from Dubrovnik that proves you were actually paying attention.</p>
       <div class="physical-notice">
-        <p>Show this screen at the duty free shop on your way home to collect your printed card.</p>
+        <p>Show this screen at the duty free shop on your way home to collect your card.</p>
       </div>
-      <button class="btn-full">Get the real thing</button>
+      <button class="btn-full">Collect this card</button>
     </div>
   </div>
 </div>
@@ -571,26 +599,35 @@
   </svg>`;
 
   const PIN_GREY = `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="32" viewBox="0 0 22 32">
-    <path d="M11 0C4.9 0 0 4.9 0 11c0 7.8 11 21 11 21s11-13.2 11-21C22 4.9 17.1 0 11 0z" fill="#8A9DAD"/>
+    <path d="M11 0C4.9 0 0 4.9 0 11c0 7.8 11 21 11 21s11-13.2 11-21C22 4.9 17.1 0 11 0z" fill="#9AAAB8"/>
     <circle cx="11" cy="11" r="4.5" fill="rgba(255,255,255,0.55)"/>
   </svg>`;
+
+  // ── Map state ────────────────────────────────────────────────
+  let map = null;
+  let mapReady = false;
+  let animStarted = false;
 
   // ── Screen transitions ──────────────────────────────────────
   function toScreen2() {
     switchScreen('s2');
+    // Start map pre-loading while user is on screen 2
+    preloadMap();
     // Card flips after a beat
     setTimeout(() => {
       document.getElementById('cardFlipper').classList.add('flipped');
-      // Info text fades in after flip completes
       setTimeout(() => {
         document.getElementById('s2Info').classList.add('show');
-      }, 1200);
+      }, 1300);
     }, 600);
   }
 
   function toScreen3() {
     switchScreen('s3');
-    initPassport();
+    requestAnimationFrame(() => {
+      if (map) map.invalidateSize();
+      startPassportAnim();
+    });
   }
 
   function switchScreen(id) {
@@ -598,105 +635,109 @@
     document.getElementById(id).classList.add('active');
   }
 
-  // ── Passport ────────────────────────────────────────────────
-  let passportReady = false;
+  // ── Map pre-init ────────────────────────────────────────────
+  // Called when entering screen 2 so tiles load while user reads the card.
+  // #s3 is position:fixed inset:0 so it has real dimensions even at opacity:0.
+  function preloadMap() {
+    if (mapReady) return;
+    mapReady = true;
 
-  function initPassport() {
-    if (passportReady) return;
-    passportReady = true;
-
-    // Wait for screen to be visible before Leaflet measures container
-    requestAnimationFrame(() => {
-      const map = L.map('map', {
-        zoomControl: false,
-        attributionControl: true,
-        dragging: false,
-        touchZoom: false,
-        scrollWheelZoom: false,
-        doubleClickZoom: false,
-        keyboard: false,
-        inertia: false,
-      });
-
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
-        subdomains: 'abcd',
-        maxZoom: 19,
-        attribution: '© <a href="https://carto.com/">CARTO</a>',
-      }).addTo(map);
-
-      // Phase A: Start zoomed in on Croatia
-      map.setView([43.4, 17.6], 6);
-
-      // Phase A (0.5s): Dubrovnik pin glows in
-      setTimeout(() => {
-        const dubPin = makePin(map, 'DUBROVNIK', 42.65, 18.09, true);
-        dubPin.on('click', openModal);
-      }, 500);
-
-      // Phase B (2s): Zoom out to world view
-      setTimeout(() => {
-        map.flyTo([28, 12], 2, { duration: 2.5, easeLinearity: 0.35 });
-      }, 2000);
-
-      // Phase B cont. (3.3s): Other city pins fade in
-      setTimeout(() => {
-        const lonPin  = makePin(map, 'LONDON', 51.51, -0.13, false);
-        const paoPin  = makePin(map, 'PAOLA',  35.87, 14.50, false);
-        lonPin.on('click',  e => showTip('Visit London to unlock these stories', e.containerPoint));
-        paoPin.on('click',  e => showTip('Visit Paola to unlock these stories',  e.containerPoint));
-      }, 3300);
-
-      // Phase C (4.8s): Passport header fades in
-      setTimeout(() => {
-        document.getElementById('pptHeader').classList.add('show');
-      }, 4800);
-
-      // Phase D (6.5s): Guide chip appears
-      setTimeout(() => {
-        document.getElementById('guideChip').classList.add('show');
-      }, 6500);
-
-      // Enable user interaction at 7s
-      setTimeout(() => {
-        map.dragging.enable();
-        map.touchZoom.enable();
-      }, 7000);
+    map = L.map('map', {
+      zoomControl: false,
+      attributionControl: true,
+      dragging: false,
+      touchZoom: false,
+      scrollWheelZoom: false,
+      doubleClickZoom: false,
+      keyboard: false,
+      inertia: false,
     });
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+      subdomains: 'abcd',
+      maxZoom: 19,
+      attribution: '© <a href="https://carto.com/">CARTO</a>',
+    }).addTo(map);
+
+    // Init at world view — tiles load while user is on screen 2
+    map.setView([35, 5], 2);
+
+    // Add all pins immediately (labels hidden until animation reveals them)
+    const dubPin = makePin('DUBROVNIK', 42.65, 18.09, true);
+    const lonPin = makePin('LONDON', 51.51, -0.13, false);
+    const paoPin = makePin('PAOLA', 35.87, 14.50, false);
+
+    dubPin.on('click', openModal);
+    lonPin.on('click', e => showTip('Visit London to unlock these stories', e.containerPoint));
+    paoPin.on('click', e => showTip('Visit Paola to unlock these stories', e.containerPoint));
   }
 
-  function makePin(map, name, lat, lng, unlocked) {
+  // ── Passport animation ───────────────────────────────────────
+  function startPassportAnim() {
+    if (animStarted) return;
+    animStarted = true;
+
+    // Jump instantly to Croatia (zoom 6) — zoom-2 tiles already loaded
+    map.setView([43.5, 17.5], 6, { animate: false });
+
+    // 0.5s: Dubrovnik pin label appears
+    setTimeout(() => showPinLabel('DUBROVNIK'), 500);
+
+    // 2s: Fly out to world view (zoom-2 tiles load fast, usually already cached)
+    setTimeout(() => {
+      map.flyTo([35, 5], 2, { duration: 2.2, easeLinearity: 0.38 });
+    }, 2000);
+
+    // 3.6s: Other city labels fade in
+    setTimeout(() => {
+      showPinLabel('LONDON');
+      showPinLabel('PAOLA');
+    }, 3600);
+
+    // 4.8s: Passport header
+    setTimeout(() => {
+      document.getElementById('pptHeader').classList.add('show');
+    }, 4800);
+
+    // 6.2s: Guide chip
+    setTimeout(() => {
+      document.getElementById('guideChip').classList.add('show');
+    }, 6200);
+
+    // 6.8s: Enable interaction
+    setTimeout(() => {
+      map.dragging.enable();
+      map.touchZoom.enable();
+    }, 6800);
+  }
+
+  // ── Pin helpers ─────────────────────────────────────────────
+  function makePin(name, lat, lng, unlocked) {
     const svg = unlocked ? PIN_RED : PIN_GREY;
     const icon = L.divIcon({
       className: '',
-      html: `<div class="hw-pin${unlocked ? ' show' : ''}" id="pin-${name}">
+      html: `<div class="hw-pin-wrap" id="pin-${name}">
         <div class="hw-pin-label">${name}</div>
         ${svg}
       </div>`,
       iconSize: [22, 32],
-      iconAnchor: [11, 32],
+      iconAnchor: [11, 32],  // bottom-center of SVG = geographic point
     });
+    return L.marker([lat, lng], { icon }).addTo(map);
+  }
 
-    const marker = L.marker([lat, lng], { icon }).addTo(map);
-
-    // Fade in label for locked pins after a short delay
-    if (!unlocked) {
-      setTimeout(() => {
-        const el = document.getElementById('pin-' + name);
-        if (el) el.classList.add('show');
-      }, 500);
-    }
-
-    return marker;
+  function showPinLabel(name) {
+    const el = document.getElementById('pin-' + name);
+    if (el) el.classList.add('show');
   }
 
   // ── Tooltip for locked pins ─────────────────────────────────
   let tipTimer;
-
   function showTip(text, point) {
     const el = document.getElementById('mapTip');
     el.textContent = text;
-    el.style.left  = point.x + 'px';
-    el.style.top   = point.y + 'px';
+    el.style.left = point.x + 'px';
+    el.style.top  = point.y + 'px';
     el.classList.add('show');
     clearTimeout(tipTimer);
     tipTimer = setTimeout(() => el.classList.remove('show'), 2500);
@@ -710,13 +751,11 @@
 
   function closeModal() {
     document.getElementById('modal').classList.remove('open');
-    // Reset card flip state after sheet slides away
     setTimeout(() => {
       document.getElementById('modalFlipper').classList.remove('flipped');
     }, 420);
   }
 
-  // Close on backdrop tap
   document.getElementById('modal').addEventListener('click', function(e) {
     if (e.target === this) closeModal();
   });
